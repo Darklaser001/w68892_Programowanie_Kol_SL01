@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
     </head>
-    <body>
+    <body style bgcolor="grey">
         <!-- zadanie 3 -->
         <center>
             <input type="button" onclick="taskTwoOne()" id="butOne" style="width: 100px; height: 100px; border-radius: 100%;"><br><br>
@@ -14,40 +14,52 @@
         <input type="number" id="lightYellow" style="width: 100px">Żółty<br>
         <input type="number" id="lightRed" style="width: 100px">Czerwony<br>
         <button onclick="changer()" style="width: 100px">Zmień</button>
-        <hr> <!-- zadanie 3 -->
-        <form id="form" novalidate>
-            Login<br> <input type="text" id="login"><br>
-            Email:<br> <input type="text" id="email"><br>
-            Hasło:<br> <input type="password" id="passwor"><br>
-            Powtórz Hasło:<br> <input type="passwordRepeat" id="passwor"><br>
-            Czy chcesz telefon: <input type="checkbox" id="checker"><br>
-            <span id="toShow">Telefon:<br> <input type="number" id="phone"><br></span>
-            Data urodzenia:<br> <input type="date" id="birthday"><br>
-            <button type="submit">Zapisz</button>
-        </form>
+        <div style="background-color: pink;">
+            <hr> <!-- zadanie 3 -->
+            <form id="form" novalidate style="background-color: lightblue;">
+                Login<br> <input type="text" id="login"><br>
+                Email:<br> <input type="text" id="email"><br>
+                Hasło:<br> <input type="password" id="password"><br>
+                Powtórz Hasło:<br> <input type="password" id="passwordRepeat"><br>
+                Czy chcesz telefon i date: <input type="checkbox" id="checker" onclick="shower()"><br>
+                <span id="toShow" style="display: none;">
+                    Telefon:<br> <input type="number" id="phone"><br>
+                    Data urodzenia:<br> <input type="date" id="birthday"><br>
+                </span>
+                
+                <button type="submit">Zapisz</button>
+            </form><br><br>
+    
+            <table style="border: 1px solid black; background-color: lightgreen;" id="zad3">
+                <tr>
+                    <th>Imie</th>
+                    <th>Nazwisko</th>
+                </tr>
+            </table>
+        </div>
         
         <script>
             
             // początkowa inicjalizacja kolorów
-            document.getElementById("butOne").style.backgroundColor = "transparent";
-            document.getElementById("butTwo").style.backgroundColor = "transparent";
-            document.getElementById("butThree").style.backgroundColor = "transparent";
+            document.getElementById("butOne").style.backgroundColor = "white";
+            document.getElementById("butTwo").style.backgroundColor = "white";
+            document.getElementById("butThree").style.backgroundColor = "white";
 
             // funkcję do zmiany kolorów
             function taskTwoOne() {
-                document.getElementById("butOne").style.backgroundColor = "Green";
-                document.getElementById("butTwo").style.backgroundColor = "transparent";
-                document.getElementById("butThree").style.backgroundColor = "transparent";
+                document.getElementById("butOne").style.backgroundColor = "white";
+                document.getElementById("butTwo").style.backgroundColor = "white";
+                document.getElementById("butThree").style.backgroundColor = "Green";
             }
             function taskTwoTwo() {
-                document.getElementById("butOne").style.backgroundColor = "transparent";
+                document.getElementById("butOne").style.backgroundColor = "white";
                 document.getElementById("butTwo").style.backgroundColor = "Yellow";
-                document.getElementById("butThree").style.backgroundColor = "transparent";
+                document.getElementById("butThree").style.backgroundColor = "white";
             }
             function taskTwoThree() {
-                document.getElementById("butOne").style.backgroundColor = "transparent";
-                document.getElementById("butTwo").style.backgroundColor = "transparent";
-                document.getElementById("butThree").style.backgroundColor = "Red";
+                document.getElementById("butOne").style.backgroundColor = "Red";
+                document.getElementById("butTwo").style.backgroundColor = "white";
+                document.getElementById("butThree").style.backgroundColor = "white";
             }
 
             // konstruktor świateł 
@@ -83,6 +95,41 @@
             // pierwotne wywołanie funkcji zmieniającej kolory
             lights();
 
+            // ZAD 3
+
+            // podpięcie funkcji validateForm() pod zdarzenie submit formularza
+            const form = document.getElementById('form');
+            form.addEventListener('submit', validateForm);
+
+            // funkcja wywoływana przy submicie formularza
+
+            // funkcja sprawdzająca wiek
+            function validateAge() {
+                const now = new Date();
+                const birthdayDate = new Date(birthday.value);
+
+                var age = now.getFullYear() - birthdayDate.getFullYear();
+                var month = now.getMonth() - birthdayDate.getMonth();
+                if(month < 0 || (month == 0 && now.getDate() < birthdayDate.getDate())) {
+                    age--;
+                }
+
+                if(age > 18) {
+                    return true;
+                }
+                return false;
+            }
+
+
+            // funkcja pokazująca telefon
+            function shower() {
+                if(document.getElementById("checker").checked) {
+                    document.getElementById("toShow").style.display = "block";
+                } else {
+                    document.getElementById("toShow").style.display = "none";
+                }
+            }
+
             // funkcja sprawdzająca czy pole posiada wartość
             function validateRequiredField(fieldValue) {
             if (fieldValue.trim() === '') {
@@ -94,7 +141,7 @@
 
             // funkcja czy login ma min. 3 znaki
             function validateRequiredLenghtLogin() {
-                if(length(document.getElementById(login).value) > 3) {
+                if(document.getElementById("login").value.length >= 3) {
                     return true;
                 }
                 return false;
@@ -120,19 +167,101 @@
                 return false;
             }
 
-            // funkcja wywoływana przy submicie formularza
             function validateForm(event) {
+
+                                
                 event.preventDefault(); // zatrzymuje standardową akcję submitowania formularza
-            }
 
-            // sprawdzenie czy działa 
-            if(correctForm) {
-                alert('Formularz wypełniono poprawnie!')
-            }
+                    // pobieranie wartości pól formularza
+                let login = document.getElementById('login');
+                let email = document.getElementById('email');
+                let password = document.getElementById('password');
+                let passwordRepeat = document.getElementById('passwordRepeat');
+                let phone = document.getElementById('phone');
+                let birthday = document.getElementById('birthday');
 
-            // podpięcie funkcji validateForm() pod zdarzenie submit formularza
-            const form = document.getElementById('form');
-            form.addEventListener('submit', validateForm);
+                let correctForm = true;
+
+
+                if (!validateRequiredField(login.value)) {
+                    login.setCustomValidity("Uzupełnij polę login");
+                    login.reportValidity('');
+                    correctForm = false;
+                    return;
+                }
+                
+                if(!validateRequiredLenghtLogin()){
+                    login.setCustomValidity("Wpisz conajmniej 3 znaki");
+                    login.reportValidity('');
+                    correctForm = false;
+                    return;
+                }
+
+                if (!validateRequiredField(email.value)) {
+                    email.setCustomValidity("Uzupełnij polę email");
+                    email.reportValidity('');
+                    correctForm = false;
+                    return;
+                }
+
+                if (!validateRequiredField(password.value)) {
+                    password.setCustomValidity("Uzupełnij polę hasło");
+                    console.log(password.value)
+                    password.reportValidity('');
+                    correctForm = false;
+                    return;
+                }
+
+                if (!validateRequiredField(passwordRepeat.value)) {
+                    passwordRepeat.setCustomValidity("Uzupełnij polę hasło");
+                    passwordRepeat.reportValidity('');
+                    correctForm = false;
+                    return;
+                }
+
+                if (!validateEmail(email.value)) {
+                    passwordRepeat.setCustomValidity("Popraw formę emailu");
+                    passwordRepeat.reportValidity('');
+                    correctForm = false;
+                    return;
+                }
+
+                if (!validatePassword(password.value)) {
+                    passwordRepeat.setCustomValidity("Hasło musi mieć co najmniej 8 znaków, zawierać co najmniej jedną małą literę, jedną wielką literę i jedną cyfrę!");
+                    passwordRepeat.reportValidity('');
+                    correctForm = false;
+                    return;
+                }
+
+                if(!checkBothPasswords(password, passwordRepeat)) {
+                    passwordRepeat.setCustomValidity("Hasła się różnią!");
+                    passwordRepeat.reportValidity('');
+                    password.setCustomValidity("Hasła się różnią");
+                    password.reportValidity('');
+                    correctForm = false;
+                    return;
+                }
+
+                if(!validateAge()) {
+                    document.getElementById("birthday").setCustomValidity("nie jesteś pełnoletni!");
+                    document.getElementById("birthday").reportValidity('');
+                    correctForm = false;
+                    return;
+                }
+
+                // sprawdzenie czy działa 
+                if(correctForm) {
+                    alert('Formularz wypełniono poprawnie!');
+                    const table2 = document.getElementById("zad3");
+                    const newRow = table2.insertRow();
+                    var newCell = newRow.insertCell();
+                    newCell.textContent = document.getElementById("login").value;
+                    newCell = newRow.insertCell();
+                    newCell.textContent = document.getElementById("email").value;
+                }
+
+                }
+                
         </script>
     </body>
 </html>
