@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <!-- zadanie 3 -->
+        <center>
+            <input type="button" onclick="taskTwoOne()" id="butOne" style="width: 100px; height: 100px; border-radius: 100%;"><br><br>
+            <input type="button" onclick="taskTwoTwo()" id="butTwo" style="width: 100px; height: 100px; border-radius: 100%;"><br><br>
+            <input type="button" onclick="taskTwoThree()" id="butThree" style="width: 100px; height: 100px; border-radius: 100%;"><br><br>
+        </center>
+        <input type="number" id="lightGreen" style="width: 100px">Zielony<br>
+        <input type="number" id="lightYellow" style="width: 100px">Żółty<br>
+        <input type="number" id="lightRed" style="width: 100px">Czerwony<br>
+        <button onclick="changer()" style="width: 100px">Zmień</button>
+        <hr> <!-- zadanie 3 -->
+        <form id="form" novalidate>
+            Login<br> <input type="text" id="login"><br>
+            Email:<br> <input type="text" id="email"><br>
+            Hasło:<br> <input type="password" id="passwor"><br>
+            Powtórz Hasło:<br> <input type="passwordRepeat" id="passwor"><br>
+            Czy chcesz telefon: <input type="checkbox" id="checker"><br>
+            <span id="toShow">Telefon:<br> <input type="number" id="phone"><br></span>
+            Data urodzenia:<br> <input type="date" id="birthday"><br>
+            <button type="submit">Zapisz</button>
+        </form>
+        
+        <script>
+            
+            // początkowa inicjalizacja kolorów
+            document.getElementById("butOne").style.backgroundColor = "transparent";
+            document.getElementById("butTwo").style.backgroundColor = "transparent";
+            document.getElementById("butThree").style.backgroundColor = "transparent";
+
+            // funkcję do zmiany kolorów
+            function taskTwoOne() {
+                document.getElementById("butOne").style.backgroundColor = "Green";
+                document.getElementById("butTwo").style.backgroundColor = "transparent";
+                document.getElementById("butThree").style.backgroundColor = "transparent";
+            }
+            function taskTwoTwo() {
+                document.getElementById("butOne").style.backgroundColor = "transparent";
+                document.getElementById("butTwo").style.backgroundColor = "Yellow";
+                document.getElementById("butThree").style.backgroundColor = "transparent";
+            }
+            function taskTwoThree() {
+                document.getElementById("butOne").style.backgroundColor = "transparent";
+                document.getElementById("butTwo").style.backgroundColor = "transparent";
+                document.getElementById("butThree").style.backgroundColor = "Red";
+            }
+
+            // konstruktor świateł 
+            class lighte{
+                constructor() {
+                    this.green = 1 * 1000;
+                    this.yellow = 2 * 1000;
+                    this.red = 3 * 1000;
+                }
+                setColors(green, yellow, red) {
+                    this.green = green  * 1000;
+                    this.yellow = this.green + yellow  * 1000;
+                    this.red = this.yellow + red  * 1000;
+                }
+            }
+            
+            // funkcja zapisu zmian częstotliwości
+            function changer() {
+                light.setColors(document.getElementById("lightGreen").value, document.getElementById("lightYellow").value, document.getElementById("lightRed").value);
+            }
+
+            // funkcja działająca no stop zmieniająca kolory
+            function lights() {
+             setTimeout("taskTwoOne()",light.green);
+             setTimeout("taskTwoTwo()",light.yellow);
+             setTimeout("taskTwoThree()",light.red);
+             setTimeout("lights()",light.red);
+            }
+            
+            // obiekt light
+            light = new lighte();
+
+            // pierwotne wywołanie funkcji zmieniającej kolory
+            lights();
+
+            // funkcja sprawdzająca czy pole posiada wartość
+            function validateRequiredField(fieldValue) {
+            if (fieldValue.trim() === '') {
+                return false;
+            } else {
+                return true;
+            }
+            }
+
+            // funkcja czy login ma min. 3 znaki
+            function validateRequiredLenghtLogin() {
+                if(length(document.getElementById(login).value) > 3) {
+                    return true;
+                }
+                return false;
+            }
+
+            // funckja czy email prawidłowy (regex)
+            function validateEmail(email) {
+                const emailRegex = /[a-zA-Z]+.{5,}@[a-zA-Z]+.{2,}\.[a-zA-Z]{2,5}/;
+                return emailRegex.test(email);
+            }
+
+            // funkcja sprawdzająca trudność hasła
+            function validatePassword(password) {
+                const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+                return passwordRegex.test(password);
+            }
+
+            // funckja sprawdzająca czy oba hasła są takie same
+            function checkBothPasswords(passwordOne, passwordTwo) {
+                if(passwordOne.value == passwordTwo.value) {
+                    return true;
+                }
+                return false;
+            }
+
+            // funkcja wywoływana przy submicie formularza
+            function validateForm(event) {
+                event.preventDefault(); // zatrzymuje standardową akcję submitowania formularza
+            }
+
+            // sprawdzenie czy działa 
+            if(correctForm) {
+                alert('Formularz wypełniono poprawnie!')
+            }
+
+            // podpięcie funkcji validateForm() pod zdarzenie submit formularza
+            const form = document.getElementById('form');
+            form.addEventListener('submit', validateForm);
+        </script>
+    </body>
+</html>
